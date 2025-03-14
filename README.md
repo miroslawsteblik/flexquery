@@ -28,8 +28,10 @@ Database Environment Support:
 
 # Installation
 ## Clone the repository
-`git clone https://github.com/miroslawsteblik/flexquery.git`
-`cd FlexQuery`
+```bash
+git clone https://github.com/miroslawsteblik/flexquery.git
+cd FlexQuery
+```
 
 ## Create virtual environment
 ```bash
@@ -75,8 +77,7 @@ Parameters in SQL queries use the :parameter_name syntax:
 ```sql
 -- Example query showing parameter usage
 SELECT * FROM users
-WHERE company_id = :company_id
-  AND status IN :status_list
+WHERE company_id = :company_id AND status IN :status_list
 ```
 
 ## Define parameters in `params.yml`
