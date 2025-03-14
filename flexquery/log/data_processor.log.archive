@@ -1,0 +1,51 @@
+2025-03-14 18:10:22,691 - INFO - 
+======================================== NEW EXECUTION [ENV: TEST] ========================================
+
+2025-03-14 18:10:22,691 - INFO - Launching SQLConnectionManager.create_sqlalchemy_engine
+2025-03-14 18:10:22,784 - INFO - Completed SQLConnectionManager.create_sqlalchemy_engine
+2025-03-14 18:10:29,741 - INFO - Selected file: duckdb_test.sql
+2025-03-14 18:10:29,742 - INFO - SQL query:
+-- duckdb test
+SELECT 
+    EmployerPK,
+    OneCode,
+    employer.EmployerName,
+    employer.FileDate
+FROM employer
+left join scheme on employer.OneCode = scheme.EmployerKey
+WHERE 
+    scheme.EmployerKey in :employer_key 
+    and employer.FileDate in :file_date 
+
+ORDER BY employer.EmployerName ASC
+
+2025-03-14 18:10:29,742 - INFO - Launching DataProcessor.execute_query
+2025-03-14 18:10:29,742 - INFO - Launching str.extract_parameters_from_sql
+2025-03-14 18:10:29,742 - INFO - Completed str.extract_parameters_from_sql
+2025-03-14 18:10:29,743 - INFO - Required parameters: ['employer_key', 'file_date']
+2025-03-14 18:10:29,743 - INFO - Launching DataProcessor.validate_parameters
+2025-03-14 18:10:29,743 - INFO - Completed DataProcessor.validate_parameters
+2025-03-14 18:10:29,744 - INFO - Executing query with parameters: [BindParameter('employer_key_0', 'BTUL01', type_=String()), BindParameter('employer_key_1', 'IPCL01', type_=String()), BindParameter('employer_key_2', 'DAIU01', type_=String()), BindParameter('employer_key_3', 'SYNT76', type_=String()), BindParameter('file_date_0', '20230413', type_=String()), BindParameter('file_date_1', '20230414', type_=String()), BindParameter('file_date_2', '20231212', type_=String())]
+2025-03-14 18:10:29,773 - ERROR - 
+Error executing query: (duckdb.duckdb.CatalogException) Catalog Error: Table with name employer does not exist!
+Did you mean "pg_type"?
+
+LINE 7: FROM employer
+             ^
+[SQL: -- duckdb test
+SELECT 
+    EmployerPK,
+    OneCode,
+    employer.EmployerName,
+    employer.FileDate
+FROM employer
+left join scheme on employer.OneCode = scheme.EmployerKey
+WHERE 
+    scheme.EmployerKey IN ($1, $2, $3, $4) 
+    and employer.FileDate IN ($5, $6, $7) 
+
+ORDER BY employer.EmployerName ASC
+]
+[parameters: ('BTUL01', 'IPCL01', 'DAIU01', 'SYNT76', '20230413', '20230414', '20231212')]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-03-14 18:10:29,774 - INFO - Completed DataProcessor.execute_query
