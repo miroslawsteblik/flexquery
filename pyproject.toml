@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flex-query"
+version = "1.0.0"
+description = "A flexible, parameter-driven SQL query execution tool that connects to multiple database environments."
+readme = "README.md"
+authors = [
+    {name = "mirosalwsteblik"}
+]
+requires-python = ">=3.9"
+classifiers = [
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "pandas",
+    "python-dotenv",
+    "click",
+    "pyyaml",
+    "sqlalchemy",
+    "duckdb-engine",
+    "pyodbc",
+]
+
+[project.scripts]
+flexquery = "flexquery.cli.main:cli"
+
+[tool.setuptools]
+package-dir = {"" = "core"}
+packages = ["flexquery", "flexquery.cli", "flexquery.config", "flexquery.connection", "flexquery.processor"]
+
+[tool.setuptools.package-data]
+"*" = ["*.yml", "*.yaml", "*.sql"]
