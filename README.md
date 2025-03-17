@@ -28,6 +28,12 @@ Database Environment Support:
 
 # Installation
 
+## Clone project
+```bash
+git clone https://github.com/miroslawsteblik/flexquery.git
+cd flex-query
+```
+
 ## Create virtual environment
 ```bash
 python -m venv .venv
@@ -36,8 +42,9 @@ python -m venv .venv
 
 ## Install
 ```bash
-pip install flexquery
+pip install -e.  # for development mode
 ```
+
 
 ## Create `environment.yml` file with your database connections
 ### Example:
