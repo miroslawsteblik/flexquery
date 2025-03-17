@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from flexquery.utils.logging_config import log_execution, get_logger
+from flexquery.config.logging_config import log_execution, get_logger
 import pyodbc
 
 
@@ -23,7 +23,6 @@ class SQLConnectionManager:
         
         # mssql
         else:  
-            # More robust connection string with additional options
             connection_string = (
                 f"mssql+pyodbc://@{self.config.server}/{self.config.database}?"
                 f"driver=ODBC+Driver+17+for+SQL+Server&"
@@ -47,7 +46,6 @@ class SQLConnectionManager:
             except Exception as e:
                 logger.info(f"Direct ODBC connection failed: {e}")
             
-            # Create engine with proper error handling
             return create_engine(
                 connection_string,
                 connect_args={"connect_timeout": 30},

@@ -3,10 +3,7 @@ from functools import wraps
 from logging.handlers import TimedRotatingFileHandler
 import os
 
-
-# Log file paths
-log_path = "flexquery/log/data_processor.log"
-log_archive_path = "flexquery/log/data_processor.log.archive"
+from flexquery.config.pathconfig import LOG_PATH, LOG_ARCHIVE_PATH
 
 
 def initialize_logging():
@@ -25,7 +22,7 @@ def initialize_logging():
     
     # Main log file - rotates daily, keeps 1 backup
     file_handler = TimedRotatingFileHandler(
-        log_path,
+        LOG_PATH,
         when='midnight',  # Rotate at midnight
         interval=1,       # Daily rotation
         backupCount=1     # Keep only 1 day of logs in the active file
@@ -33,7 +30,7 @@ def initialize_logging():
     file_handler.setLevel(logging.INFO)
     
     # Archive handler - this accumulates all logs
-    archive_handler = logging.FileHandler(log_archive_path, mode='a')
+    archive_handler = logging.FileHandler(LOG_ARCHIVE_PATH, mode='a')
     archive_handler.setLevel(logging.INFO)
     
     # Set formatter for all handlers

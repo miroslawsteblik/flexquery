@@ -1,6 +1,8 @@
-#.env
+.env
 __pycache__/
 .venv/
 *.pyc
 *.csv
-.vscode/
+log/
+*.egg-info/
+_test_data/
