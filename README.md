@@ -144,12 +144,7 @@ flexquery run --env TEST   # Local DuckDB testing
 flexquery --env DEV --write-csv      
 ```
 
-#### With `--write-excel` flag - saves excel file with 4 tabs
-
-- All
-- Policy holders with no email
-- Policy holders with no email and postcode
-- Policy holders with no email and no postcode
+#### With `--write-excel` flag - saves query to excel
 
 ```bash
 flexquery run --env PROD --write-excel   
