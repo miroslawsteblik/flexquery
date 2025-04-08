@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "flex-query"
-version = "1.0.0"
+dynamic = ["version"] 
 description = "A flexible, parameter-driven SQL query execution tool that connects to multiple database environments."
 readme = "README.md"
 authors = [
@@ -22,12 +22,24 @@ classifiers = [
 ]
 dependencies = [
     "pandas",
-    "python-dotenv",
     "click",
     "pyyaml",
     "sqlalchemy",
     "duckdb-engine",
     "pyodbc",
+    "openpyxl",
+    "xlsxwriter",
+    "markdown"
+]
+
+[project.optional-dependencies]
+dev = [
+    "build",
+    "wheel",
+    "twine",
+    "pytest",
+    "black",
+    "flake8",
 ]
 
 [project.scripts]
@@ -35,7 +47,18 @@ flexquery = "flexquery.cli.main:cli"
 
 [tool.setuptools]
 package-dir = {"" = "core"}
-packages = ["flexquery", "flexquery.cli", "flexquery.config", "flexquery.connection", "flexquery.processor"]
+
+[tool.setuptools.packages.find]
+where = ["core"]  # look for packages in the core directory
+include = ["flexquery*"]  # include all packages starting with flexquery
+exclude = ["tests*", "future*"]  
+
+[tool.setuptools.data-files]
+"scripts" = ["core/scripts/*.bat"]
 
 [tool.setuptools.package-data]
-"*" = ["*.yml", "*.yaml", "*.sql"]
+"*" = ["*.yml", "*.yaml", "*.sql", "README.md", "docs/*.md", "*.html"]
+
+[tool.setuptools.dynamic]
+version = {attr = "flexquery.version.__version__"}
+

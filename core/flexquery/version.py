@@ -1,9 +1,5 @@
-import click
+__version__ = '2.1.6'
 
-def version_callback(ctx, param, value):
-    if not value or ctx.resilient_parsing:
-        return
-    click.echo(f"flex-query version {__version__}")
-    ctx.exit()
-
-__version__ = '1.1.0'
+# is there anything usefull that need to be here?
+# I don't think so.
+# I will leave it as it is.

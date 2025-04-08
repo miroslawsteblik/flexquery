@@ -1,0 +1,11 @@
+# template for flexquery parameters configuration
+# Please update below parameters as per your requirement to be used in SQL queries
+
+scheme_numbers:
+ - param_scheme_number_1
+ - param_scheme_number_2
+
+employer_code:
+  - param_employer_code_1
+
+status: param_status

@@ -1,7 +1,0 @@
-pandas
-python-dotenv
-pyyaml
-sqlalchemy
-duckdb-engine
-pyodbc
-click

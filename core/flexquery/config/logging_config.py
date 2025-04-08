@@ -1,10 +1,29 @@
+import click
 import logging
 from functools import wraps
 from logging.handlers import TimedRotatingFileHandler
-import os
+from flexquery.config.pathconfig import  AppPaths
 
-from flexquery.config.pathconfig import LOG_PATH, LOG_ARCHIVE_PATH
 
+class ClickEchoHandler(logging.StreamHandler):
+    """Custom logging handler that uses Click's echo for terminal output"""
+    
+    def emit(self, record):
+        try:
+            msg = self.format(record)
+            
+            # Style output based on log level
+            if record.levelno >= logging.ERROR:
+                click.secho(msg, fg="red", err=True, bold=True)
+            elif record.levelno >= logging.WARNING:
+                click.secho(msg, fg="yellow")
+            elif record.levelno == logging.INFO:
+                click.echo(msg)
+            elif record.levelno == logging.DEBUG:
+                click.secho(msg, dim=True)
+                
+        except Exception:
+            self.handleError(record)
 
 def initialize_logging():
     """Initialize the logging system with console, file, and archive handlers."""
@@ -16,31 +35,28 @@ def initialize_logging():
         for handler in root_logger.handlers[:]:
             root_logger.removeHandler(handler)
     
-    # Console handler
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.INFO)
+    # Set the root logger level to DEBUG to capture all messages
+    root_logger.setLevel(logging.DEBUG)
     
-    # Main log file - rotates daily, keeps 1 backup
-    file_handler = TimedRotatingFileHandler(
-        LOG_PATH,
-        when='midnight',  # Rotate at midnight
-        interval=1,       # Daily rotation
-        backupCount=1     # Keep only 1 day of logs in the active file
-    )
-    file_handler.setLevel(logging.INFO)
+    # File handler - rotates daily
+    file_handler = TimedRotatingFileHandler(AppPaths.get_log_filepath(), when='midnight', interval=1)
+    file_formatter = logging.Formatter("%(asctime)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
+    file_handler.setFormatter(file_formatter)
+    file_handler.setLevel(logging.DEBUG) # Log all messages to file
     
     # Archive handler - this accumulates all logs
-    archive_handler = logging.FileHandler(LOG_ARCHIVE_PATH, mode='a')
-    archive_handler.setLevel(logging.INFO)
-    
-    # Set formatter for all handlers
-    formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-    console_handler.setFormatter(formatter)
-    file_handler.setFormatter(formatter)
-    archive_handler.setFormatter(formatter)
+    archive_handler = logging.FileHandler(AppPaths.get_log_archive_filepath(), mode='a')
+    archive_handler.setLevel(logging.DEBUG) # Log all messages to archive
+    archive_formatter = logging.Formatter("%(asctime)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
+    archive_handler.setFormatter(archive_formatter)
+
+    # Click-based console handler
+    console_handler = ClickEchoHandler()
+    console_formatter = logging.Formatter("%(message)s")  
+    console_handler.setFormatter(console_formatter)
+    console_handler.setLevel(logging.INFO)  
     
     # Add handlers to the root logger
-    root_logger.setLevel(logging.INFO)
     root_logger.addHandler(console_handler)
     root_logger.addHandler(file_handler)
     root_logger.addHandler(archive_handler)
@@ -50,35 +66,44 @@ def initialize_logging():
     
     return root_logger
 
-root_logger = initialize_logging()
-
 def get_logger(name=None):
     """Get a logger with the specified name."""
     if name:
         return logging.getLogger(name)
-    return root_logger
+    return logging.getLogger()
 
 def _log_message(message):
     """Helper function for logging messages."""
-    root_logger.info(message)
+    logger = get_logger()
+    logger.debug(message)
 
 def log_execution(func):
+    """Decorator to log the execution of a function."""
     @wraps(func)
     def wrapper(*args, **kwargs):
-        className = args[0].__class__.__name__ if args else ''
+        try:
+            className = args[0].__class__.__name__ if args else ''
+        except (IndexError, AttributeError):
+            className = 'Function'
+            
         functionName = func.__name__
+
         _log_message(f"Launching {className}.{functionName}")
+
         try:
             result = func(*args, **kwargs)
             _log_message(f"Completed {className}.{functionName}")
             return result
         except Exception as e:
-            root_logger.error(f"Error in {className}.{functionName}: {e}")
-            raise
-
+            _log_message(f"Error in {className}.{functionName}: {e.__class__.__name__}")
+            raise e
     return wrapper
 
 def log_separator(env=None):
     """Simple log separator."""
     env_str = f" [ENV: {env}]" if env else ""
-    root_logger.info("\n" + "=" * 40 + f" NEW EXECUTION{env_str} " + "=" * 40 + "\n")
+    logger = get_logger()
+    logger.info("\n" + "=" * 40 + f" NEW EXECUTION{env_str} " + "=" * 40 + "\n")
+
+
+

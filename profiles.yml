@@ -1,0 +1,37 @@
+# template for flexquery environment configuration
+
+
+flexquery:
+  outputs:
+    TEST:
+      type: [database_type] # duckdb
+      path: [your_database_path] # for duckdb
+
+    DEV:
+      type: [database_type] # mssql, mysql, postgresql
+      server: [your_server]
+      database: [your_database_name]
+      username: [your_username]
+      password:  [your_password]
+      read_only: false
+
+    UAT:
+      type: [database_type]
+      server: [your_server]
+      database: [your_database_name]
+      username: [your_username]
+      password:  [your_password]
+      read_only: true
+
+
+    PROD:
+      type: [database_type] # mssql, mysql, postgresql
+      server: [your_server]
+      database: [your_database_name]
+      username: [your_username]
+      password:  [your_password]
+      read_only: true
+
+
+
+
