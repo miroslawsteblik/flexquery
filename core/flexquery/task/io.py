@@ -1,7 +1,7 @@
 from io import StringIO
 import pandas as pd
 
-from flexquery.utils.calculations import SmartpathCommsCalculations
+from flexquery.utils.calculations import CommsCalculations
 
 from flexquery.config.logging_config import log_execution, get_logger
 logger = get_logger(__name__)
@@ -54,7 +54,7 @@ def write_to_excel(df: pd.DataFrame, file_name: str, output_dir: str) -> str:
         logger.warning(f"No data to save for {file_name}")
         return None
 
-    spc = SmartpathCommsCalculations(df)
+    spc = CommsCalculations(df)
 
     output_file = f"{output_dir}\{file_name}.xlsx"
     spc.save_to_excel( output_file)
