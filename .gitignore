@@ -1,8 +1,16 @@
 .env
-__pycache__/
-.venv/
-*.pyc
 *.csv
-log/
+__pycache__/
+*.pyc
+.venv/
+.vscode/
+
+# installation dirs
 *.egg-info/
 _test_data/
+dist/
+
+# application specific dirs
+output/
+queries_library/
+log/
