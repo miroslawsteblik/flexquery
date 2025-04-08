@@ -1,1 +1,1 @@
-from .main import cli as flexquery_cli  
+
